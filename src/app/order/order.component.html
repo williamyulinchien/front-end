@@ -72,10 +72,9 @@
                     <input
                     type="text"
                     class="form-control"
-                    name="productName{{ i }}"
+                    name="productName{{i}}"
                     [(ngModel)]="orderList[i].orderItems[j].productName"
-                    [readonly]="true"
-                  /> 
+                    [readonly]="true"/> 
                   </td>
                   <td class="text-center align-middle">
                     <input
@@ -84,8 +83,7 @@
                       name="quantity{{ i }}"
                       [(ngModel)]="orderList[i].orderItems[j].quantity"
                       (input)="updateSubtotal(i, j)"
-                      required
-                    />
+                      required/>
                   </td>
                   <td class="text-center align-middle">
                     <input
@@ -160,10 +158,9 @@
           </option>
         </select>
       </div>
-      <pre>{{ orderForm.value | json }}</pre>
-<pre>{{ orderForm.status }}</pre>
+      <!-- <pre>{{ orderForm.value | json }}</pre> -->
+
 <div *ngIf="orderForm.errors">
-  <pre>{{ orderForm.errors | json }}</pre>
 </div>
       <div formArrayName="orderItems">
         <div *ngFor="let item of orderItems.controls; let i = index"
@@ -178,7 +175,6 @@
                 formControlName="productId"
                 class="form-select"
                 (change)="orderForm.updateValueAndValidity()"
-                
                 required
               >
                 <option *ngFor="let product of products" [value]="product.productId" >

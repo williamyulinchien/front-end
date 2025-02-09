@@ -22,9 +22,6 @@ export class OrderComponent implements OnInit {
   userList:User[]=[]
 
   constructor(private orderService: OrderService,private orderItemService:OrderItemService,private fb: FormBuilder, private dialog: MatDialog,private userService:UserService,private productService:ProductService) { 
-    this.getUsers()
-    this.loadOrders();
-    this.getProducts()
     this.orderForm = this.fb.group({
       userId: [null, Validators.required],
       orderItems: this.fb.array([]),
@@ -34,6 +31,9 @@ export class OrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getUsers()
+    this.loadOrders();
+    this.getProducts()
   }
   getUsers(){
     this.userService.loadUser().subscribe((users:any)=>{
@@ -140,24 +140,27 @@ export class OrderComponent implements OnInit {
     if (this.orderForm.invalid) {
       return;
     } 
-    const productId = Number(this.orderForm.get('productId')?.value);
-    const quantity = Number(this.orderForm.get('quantity')?.value);
-    const orderData = {...this.orderForm.value};
     const userId = Number(this.orderForm.get('userId')?.value);
-    orderData.productId = Number(orderData.productId);
-    orderData.quantity = Number(orderData.quantity);
-    console.log(orderData)
-        this.orderService.createOrder(userId,orderData).subscribe(
+    const formValue = this.orderForm.value;
+    formValue.userId = Number(formValue.userId);
+    const orderItems = formValue.orderItems.map((item:any) => ({
+      productId: Number(item.productId),
+      quantity: Number(item.quantity),
+    }));
+   
+        this.orderService.createOrder(userId,orderItems).subscribe(
           (response) => {
             console.log('Order created successfully', response);
             this.orderForm.reset();
             this.orderItems.clear();
             this.addOrderItem();
           },
+         
       (error) => {
         console.error('Error creating order:', error);
       }
     );
+    this.loadOrders();
   }
 
 
