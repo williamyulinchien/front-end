@@ -1,10 +1,9 @@
-table {
-    th,
-    td {
-      white-space: nowrap;
-      padding: 0.75rem 1rem;
-    }
-    th {
-      font-weight: bold;
-    }
-  }
+table th,
+table td {
+  white-space: nowrap;
+  padding: 0.75rem 1rem;
+}
+
+table th {
+  font-weight: bold;
+}
