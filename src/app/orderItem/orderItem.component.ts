@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { Product } from '../model/Product';
 import { User } from '../model/User';
@@ -23,11 +23,10 @@ export class OrderItemComponent implements OnInit {
   filteredOrders: Order[] = [];
   selectedProduct: any = null;
   selectedQuantity: number = 0;
-  constructor(private productService: ProductService,private userService:UserService,private orderService:OrderService,private orderItemService:OrderItemService) {
+  constructor(private productService: ProductService,private userService:UserService,private orderService:OrderService,private orderItemService:OrderItemService,private cdr: ChangeDetectorRef ) {
     this.getProducts()
     this.getUsers()
     this.loadOrders()
-
    }
 
   ngOnInit() {
@@ -46,7 +45,7 @@ export class OrderItemComponent implements OnInit {
   }
   getProducts() {
     this.productService.getProducts().subscribe((products) => {
-      this.products = products;
+      this.products = [...products];
       console.log(this.products)
     });
   }
@@ -84,18 +83,16 @@ export class OrderItemComponent implements OnInit {
       (response) => {
         console.log('item added successfully', response);
         form.resetForm();
+        this.getProducts();
+        this.cdr.detectChanges();
       },
       (error) => {
         console.error('item added error', error);
       }
     )
+    
 
     }
-
-
-
-
-
 }
 
 
