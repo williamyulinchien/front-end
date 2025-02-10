@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Order } from '../model/Order';
 import { OrderService } from '../services/order.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -21,7 +21,7 @@ export class OrderComponent implements OnInit {
   orderForm: FormGroup;
   userList:User[]=[]
 
-  constructor(private orderService: OrderService,private orderItemService:OrderItemService,private fb: FormBuilder, private dialog: MatDialog,private userService:UserService,private productService:ProductService) { 
+  constructor(private orderService: OrderService,private orderItemService:OrderItemService,private fb: FormBuilder, private dialog: MatDialog,private userService:UserService,private productService:ProductService,private cdr: ChangeDetectorRef) { 
     this.orderForm = this.fb.group({
       userId: [null, Validators.required],
       orderItems: this.fb.array([]),
@@ -154,13 +154,15 @@ export class OrderComponent implements OnInit {
             this.orderForm.reset();
             this.orderItems.clear();
             this.addOrderItem();
+            this.loadOrders();
+            this.cdr.detectChanges();
           },
          
       (error) => {
         console.error('Error creating order:', error);
       }
     );
-    this.loadOrders();
+    
   }
 
 
